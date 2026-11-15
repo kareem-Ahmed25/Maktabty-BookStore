@@ -11,9 +11,9 @@ namespace MaktabtyWeb.Data
         {
            // base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name = "Science" },
-                new Category { Id = 2, Name = "Scifi" },
-                new Category { Id = 3, Name = "History" }
+                new Category { Id = 1, Name = "Science", DisplayOrder = 1 },
+                new Category { Id = 2, Name = "Scifi", DisplayOrder = 2 },
+                new Category { Id = 3, Name = "History", DisplayOrder = 3   }
             );
 
 
