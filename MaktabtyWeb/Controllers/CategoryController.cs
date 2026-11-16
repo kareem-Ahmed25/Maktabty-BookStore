@@ -13,7 +13,7 @@ namespace MaktabtyWeb.Controllers
         }
         public IActionResult Index()
         {
-            var categories =_context.Categories.ToList();  
+            var categories = _context.Categories.ToList();
             return View("Index", categories);
         }
         public IActionResult Create()
@@ -23,9 +23,9 @@ namespace MaktabtyWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Create")]
-        public IActionResult CreatePOST(Category category )
+        public IActionResult CreatePOST(Category category)
         {
-            if((!string.IsNullOrEmpty(category.Name)&&_context.Categories.Any(c=>c.Name.ToLower()==category.Name.ToLower())))
+            if ((!string.IsNullOrEmpty(category.Name) && _context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower())))
             {
                 ModelState.AddModelError("Name", "A category with this name already exists.");
             }
@@ -35,7 +35,7 @@ namespace MaktabtyWeb.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-                return View("Create", category);
+            return View("Create", category);
         }
         public IActionResult Update(int? id)
         {
@@ -43,7 +43,7 @@ namespace MaktabtyWeb.Controllers
             {
                 return NotFound();
             }
-            var category= _context.Categories.Find(id);
+            var category = _context.Categories.Find(id);
             if (category == null)
             {
                 return NotFound();
@@ -57,7 +57,7 @@ namespace MaktabtyWeb.Controllers
         public IActionResult UpdatePOST(Category category)
         {
             if ((!string.IsNullOrEmpty(category.Name) &&
-                _context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower()&&c.Id!=category.Id)))
+                _context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower() && c.Id != category.Id)))
             {
                 ModelState.AddModelError("Name", "A category with this name already exists.");
             }
@@ -70,5 +70,34 @@ namespace MaktabtyWeb.Controllers
             return View();
         }
 
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var category = _context.Categories.Find(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        public IActionResult DeletePOST(int id)
+        {
+            var category = _context.Categories.Find(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+
+        }
     }
 }
