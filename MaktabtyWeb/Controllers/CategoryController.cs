@@ -1,4 +1,5 @@
 ﻿using MaktabtyWeb.Data;
+using MaktabtyWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MaktabtyWeb.Controllers
@@ -15,5 +16,19 @@ namespace MaktabtyWeb.Controllers
             var categories =_context.Categories.ToList();  
             return View("Index", categories);
         }
+        public IActionResult Create()
+        {
+            return View("Create");
+        }
+        [HttpPost]
+        [ActionName("Create")]
+        public IActionResult CreatePOST(Category category )
+        {
+            _context.Categories.Add(category);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+
+        }
+
     }
 }
