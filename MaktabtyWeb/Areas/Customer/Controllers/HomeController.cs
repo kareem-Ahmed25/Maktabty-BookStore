@@ -1,9 +1,9 @@
-
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace MaktabtyWeb.Controllers
+namespace MaktabtyWeb.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         public IActionResult Index()

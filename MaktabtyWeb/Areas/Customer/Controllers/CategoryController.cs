@@ -3,10 +3,12 @@ using Maktabty.Models;
 using MaktabtyWeb.Data;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MaktabtyWeb.Controllers
+namespace MaktabtyWeb.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class CategoryController : Controller
     {
+        
         private readonly ICategoryService _categoryService;
         public CategoryController(ICategoryService categoryService)
         {
