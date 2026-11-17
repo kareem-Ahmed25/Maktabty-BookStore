@@ -1,3 +1,5 @@
+using Maktabty.Business.Services;
+using Maktabty.Business.Services.IServices;
 using MaktabtyWeb.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +17,7 @@ namespace MaktabtyWeb
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection")));
 
+           builder.Services.AddScoped<ICategoryService,CategoryService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

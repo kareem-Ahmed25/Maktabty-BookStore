@@ -15,4 +15,13 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Maktabty.Business\Maktabty.Business.csproj" />
+    <ProjectReference Include="..\Maktabty.DataAccess\Maktabty.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>
