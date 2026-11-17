@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Maktabty.DataAccess\Maktabty.DataAccess.csproj" />
+    <ProjectReference Include="..\Maktabty.Models\Maktabty.Models.csproj" />
+    <ProjectReference Include="..\Maktabty.Utility\Maktabty.Utility.csproj" />
+  </ItemGroup>
+
+</Project>
