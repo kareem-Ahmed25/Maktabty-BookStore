@@ -1,3 +1,7 @@
 <Solution>
+  <Project Path="Maktabty.Business/Maktabty.Business.csproj" Id="00b30c09-82a2-41a5-8540-5282daf836ee" />
+  <Project Path="Maktabty.DataAccess/Maktabty.DataAccess.csproj" Id="1fbbb268-388f-428d-927e-a6d7d870d009" />
+  <Project Path="Maktabty.Models/Maktabty.Models.csproj" Id="3939bca2-10e3-4c09-90e4-f1d050a0d6d0" />
+  <Project Path="Maktabty.Utility/Maktabty.Utility.csproj" Id="f45190ca-1ce9-4305-9c5f-4f10372cd681" />
   <Project Path="MaktabtyWeb/MaktabtyWeb.csproj" />
 </Solution>
