@@ -16,9 +16,12 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var products = await _productService.GetAllProductsAsync();
-            return View(products);
+          
+            return View();
         }
+
+      
+
         public async Task<IActionResult> Create()
         {
             return View("Create");
@@ -90,5 +93,16 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
             return RedirectToAction("Index");
 
         }
+
+        #region API CALLS
+        public async Task<IActionResult> GetAll()
+        {
+            var products = await _productService.GetAllProductsAsync(true);
+            return Json(new { data = products });
+        }
+
+
+
+        #endregion
     }
 }
