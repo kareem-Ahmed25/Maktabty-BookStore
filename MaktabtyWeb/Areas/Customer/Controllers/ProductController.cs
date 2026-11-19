@@ -1,7 +1,9 @@
 ﻿using Maktabty.Business.Services.IServices;
 using Maktabty.Models;
+using Maktabty.Models.ViewModels;
 using MaktabtyWeb.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MaktabtyWeb.Areas.Customer.Controllers
 {
@@ -10,9 +12,12 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
     {
         
         private readonly IProductService _productService;
-        public ProductController(IProductService productService)
+        private readonly ICategoryService _categoryService;
+     
+        public ProductController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
         public async Task<IActionResult> Index()
         {
@@ -24,7 +29,16 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
 
         public async Task<IActionResult> Upsert()
         {
-            return View();
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            ProductVM productVM = new() {
+                CategoryList = categories.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                }),
+                Product = new Product()
+            };
+            return View(productVM);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
