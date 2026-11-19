@@ -27,10 +27,9 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
             return View();
         }
 
-
-
-        public async Task<IActionResult> Upsert()
+        public async Task<IActionResult> Upsert(int? id)
         {
+
             var categories = await _categoryService.GetAllCategoriesAsync();
             ProductVM productVM = new()
             {
@@ -41,6 +40,17 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
                 }),
                 Product = new Product()
             };
+            if (id == null || id == 0)
+            {
+                //create
+                return View(productVM);
+            }
+            else
+            {
+                productVM.Product = await _productService.GetProductByIdAsync(id.Value);
+                return View(productVM);
+            }
+
             return View(productVM);
         }
         [HttpPost]
@@ -59,10 +69,9 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string ProductPath = Path.Combine("images", "products");
                     string finalPath = Path.Combine(wwwRootPath, ProductPath);
-                   
+
                     if (!Directory.Exists(finalPath))
                         Directory.CreateDirectory(finalPath);
-
 
                     //save the new image 
                     using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
@@ -73,8 +82,16 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
                     productVM.Product.ImageUrl = Path.Combine(@"\", ProductPath, fileName).Replace("\\", "/");
                 }
 
+                if (productVM.Product.Id == null || productVM.Product.Id == 0)
+                {
+                    //create
+                    await _productService.CreateProductAsync(productVM.Product);
+                }
+                else
+                {
+                    await _productService.UpdateProductAsync(productVM.Product);
+                }
 
-                await _productService.CreateProductAsync(productVM.Product);
                 TempData["success"] = "Product created successfully.";
                 return RedirectToAction("Index");
             }
@@ -96,30 +113,7 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
         }
 
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            var product = await _productService.GetProductByIdAsync(id.Value);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName("Delete")]
-        public async Task<IActionResult> DeletePOST(int id)
-        {
-            await _productService.DeleteProductAsync(id);
-            TempData["success"] = "Product deleted successfully.";
-            return RedirectToAction("Index");
-
-        }
+   
 
         #region API CALLS
         public async Task<IActionResult> GetAll()
@@ -128,6 +122,39 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
             return Json(new { data = products });
         }
 
+
+
+        [HttpDelete]
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+
+            if (id == null || id == 0)
+            {
+                return Json(new { success = false, message = "Invalid ID" });
+            }
+            var productToBeDeleted = await _productService.GetProductByIdAsync(id.Value);
+            if (productToBeDeleted == null)
+            {
+                return Json(new { success = false, message = "Error While Deleting" });
+
+            }
+            //delete product image if exist
+            if (!string.IsNullOrEmpty(productToBeDeleted.ImageUrl))
+            {
+                var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.ImageUrl.TrimStart('\\','/'));
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
+
+            await _productService.DeleteProductAsync(id.Value);
+
+            return Json(new { success = true, message = "Delete Successful . " });
+
+        }
 
 
         #endregion
