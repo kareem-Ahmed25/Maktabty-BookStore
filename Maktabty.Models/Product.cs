@@ -43,6 +43,7 @@ namespace Maktabty.Models
         public double Price100 { get; set; }
         [Display(Name ="Category")]
         public int CategoryId { get; set; }
+        [ValidateNever]
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }
 

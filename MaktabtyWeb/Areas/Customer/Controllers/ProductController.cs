@@ -4,33 +4,36 @@ using Maktabty.Models.ViewModels;
 using MaktabtyWeb.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace MaktabtyWeb.Areas.Customer.Controllers
 {
     [Area("Customer")]
     public class ProductController : Controller
     {
-        
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
-     
-        public ProductController(IProductService productService, ICategoryService categoryService)
+
+        public ProductController(IProductService productService, ICategoryService categoryService, IWebHostEnvironment webHostEnvironment)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Index()
         {
-          
+
             return View();
         }
 
-      
+
 
         public async Task<IActionResult> Upsert()
         {
             var categories = await _categoryService.GetAllCategoriesAsync();
-            ProductVM productVM = new() {
+            ProductVM productVM = new()
+            {
                 CategoryList = categories.Select(c => new SelectListItem
                 {
                     Text = c.Name,
@@ -43,18 +46,55 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Upsert")]
-        public async Task<IActionResult> UpsertPOST(Product product)
+        public async Task<IActionResult> UpsertPOST(ProductVM productVM, IFormFile? file)
         {
-          
+
             if (ModelState.IsValid)
             {
-                await _productService.CreateProductAsync(product);
+
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string ProductPath = Path.Combine("images", "products");
+                    string finalPath = Path.Combine(wwwRootPath, ProductPath);
+                   
+                    if (!Directory.Exists(finalPath))
+                        Directory.CreateDirectory(finalPath);
+
+
+                    //save the new image 
+                    using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+
+                    productVM.Product.ImageUrl = Path.Combine(@"\", ProductPath, fileName).Replace("\\", "/");
+                }
+
+
+                await _productService.CreateProductAsync(productVM.Product);
                 TempData["success"] = "Product created successfully.";
                 return RedirectToAction("Index");
             }
-            return View();
+            else
+            {
+
+                var categories = await _categoryService.GetAllCategoriesAsync();
+                productVM = new()
+                {
+                    CategoryList = categories.Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    }),
+                    Product = new Product()
+                };
+                return View(productVM);
+            }
         }
-       
+
 
         public async Task<IActionResult> Delete(int? id)
         {
@@ -73,7 +113,7 @@ namespace MaktabtyWeb.Areas.Customer.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]
-        public async Task <IActionResult> DeletePOST(int id)
+        public async Task<IActionResult> DeletePOST(int id)
         {
             await _productService.DeleteProductAsync(id);
             TempData["success"] = "Product deleted successfully.";
