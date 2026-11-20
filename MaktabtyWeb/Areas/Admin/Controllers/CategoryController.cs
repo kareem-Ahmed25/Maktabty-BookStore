@@ -3,9 +3,9 @@ using Maktabty.Models;
 using MaktabtyWeb.Data;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MaktabtyWeb.Areas.Customer.Controllers
+namespace MaktabtyWeb.Areas.Admin.Controllers
 {
-    [Area("Customer")]
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         
