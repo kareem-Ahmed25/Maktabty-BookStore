@@ -1,5 +1,11 @@
-﻿new DataTable('#tblData', {
-    ajax: '/Customer/Product/GetAll',
+﻿var productDataTable;
+
+$(document).ready(function () {
+    productDataTable();
+})
+
+productDataTable=new DataTable('#tblData', {
+    ajax: '/admin/Product/GetAll',
     columns: [
         { data: 'title', "width": "25%" },
         { data: 'isbn', "width": "15%" },
@@ -13,11 +19,11 @@
         {
             data: 'id', "width": "25%", "render": function (data) {
                 return `<div class="d-flex gap-2 justify-content-end">
-                <a href="/product/upsert?id=${data}" class="btn btn-sm btn-outline-success">
+                <a href="/admin/product/upsert?id=${data}" class="btn btn-sm btn-outline-success">
                 <i class="bi bi-pencil-square"></i> Edit
                 </a>
 
-                 <a onclick="Delete('/product/delete/${data}')" class="btn btn-sm btn-outline-danger">
+                 <a onclick="Delete('/admin/product/delete/${data}')" class="btn btn-sm btn-outline-danger">
                 <i class="bi bi-trash"></i> Delete
                 </a>
 
@@ -43,7 +49,8 @@ function Delete(url) {
             $.ajax({
                 url: url,
                 type: 'DELETE',
-                success:function (data) {
+                success: function (data) {
+                    productDataTable.ajax.reload();
                     Swal.fire({
                         title: "Deleted!",
                         text: "Your file has been deleted.",
