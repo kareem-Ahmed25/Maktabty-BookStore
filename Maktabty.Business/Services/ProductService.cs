@@ -21,12 +21,25 @@ namespace Maktabty.Business.Services
             {
                 return await _context.Products.Include(p => p.Category).ToListAsync();
             }
+            else { 
+            
             return await _context.Products.ToListAsync();
+            }
         }
 
-        public async Task<Product?> GetProductByIdAsync(int id)
+        public async Task<Product?> GetProductByIdAsync(int id, bool includeCategory = false)
         {
-            return await _context.Products.FindAsync(id);
+            if (includeCategory)
+            {
+                return await _context.Products.Include(u => u.Category).FirstOrDefaultAsync(u => u.Id == id);
+            }
+            else
+            {
+
+                return await _context.Products.FirstOrDefaultAsync(u => u.Id == id);
+
+            }
+
         }
 
         public async Task<Product> CreateProductAsync(Product product)
