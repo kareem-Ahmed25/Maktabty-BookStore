@@ -1,6 +1,8 @@
 using Maktabty.Business.Services;
 using Maktabty.Business.Services.IServices;
-using MaktabtyWeb.Data;
+using Maktabty.DataAccess.Data;
+using Maktabty.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace MaktabtyWeb
@@ -17,7 +19,9 @@ namespace MaktabtyWeb
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection")));
 
-           builder.Services.AddScoped<ICategoryService,CategoryService>();
+            builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddScoped<ICategoryService,CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             var app = builder.Build();
 
@@ -32,8 +36,10 @@ namespace MaktabtyWeb
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
         
+
             app.MapStaticAssets();
 
             app.MapControllerRoute(

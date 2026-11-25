@@ -1,6 +1,6 @@
 ﻿using Maktabty.Business.Services.IServices;
 using Maktabty.Models;
-using MaktabtyWeb.Data;
+using Maktabty.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

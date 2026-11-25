@@ -1,7 +1,7 @@
 ﻿using Maktabty.Business.Services.IServices;
 using Maktabty.Models;
 using Maktabty.Models.ViewModels;
-using MaktabtyWeb.Data;
+using Maktabty.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
