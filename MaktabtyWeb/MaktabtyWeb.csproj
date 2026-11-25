@@ -7,9 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
+    <Compile Remove="Models\**" />
     <Compile Remove="wwwroot\Images\NewFolder\**" />
+    <Content Remove="Controllers\**" />
+    <Content Remove="Models\**" />
     <Content Remove="wwwroot\Images\NewFolder\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="Models\**" />
     <EmbeddedResource Remove="wwwroot\Images\NewFolder\**" />
+    <None Remove="Controllers\**" />
+    <None Remove="Models\**" />
     <None Remove="wwwroot\Images\NewFolder\**" />
   </ItemGroup>
 
@@ -24,11 +32,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.3" />
     <PackageReference Include="NuGet.Packaging" Version="8.0.0" />
     <PackageReference Include="NuGet.Protocol" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
